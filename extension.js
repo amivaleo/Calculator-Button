@@ -1,9 +1,12 @@
+const ExtensionUtils = imports.misc.extensionUtils;
+// const Me = ExtensionUtils.getCurrentExtension();
+const Config = imports.misc.config;
 const St = imports.gi.St;
 const Main = imports.ui.main;
 const Tweener = imports.ui.tweener;
 const Util = imports.misc.util;
-const Shell   = imports.gi.Shell;
-const Lang    = imports.lang;
+const Shell = imports.gi.Shell;
+const Lang = imports.lang;
 
 var dt = new Date();
 let button;
@@ -22,77 +25,65 @@ function init(extensionMeta)
 	button.connect('button-press-event', Lang.bind(this, _toggleCalculator));
 }
 
-function enable()
-{
+function enable() {
 	let children = Main.panel._rightBox.get_children();
 	Main.panel._rightBox.insert_child_at_index(button, 0)
 }
 
-function disable()
-{
+function disable() {
 	Main.panel._rightBox.remove_child(button);
 }
 
-function _toggleCalculator()
-{
+function _toggleCalculator() {
 	let win = _getWindowActor();
 
-	if (win === 'start')
-	{
-		if (new Date().getTime() > dt.getTime() )
-		{
+	if (win === 'start') {
+		if (new Date().getTime() > dt.getTime() ) {
 			dt.setTime( new Date().getTime() + 400 );
 			_startApplication();
 			return;
 		}				
 	}
 
-	if (!win)
-	{
+	if (!win) {
 		dt.setTime( new Date().getTime() + 200 );
 		return;
 	}
 
-	if (win.has_focus())
-	{
-		if (win.minimized)
-		{
-			if (new Date().getTime() > dt.getTime() )
-			{
+	if (win.has_focus()) {
+		if (win.minimized) {
+			if (new Date().getTime() > dt.getTime() ) {
 		  		win.unminimize();
 		   		win.activate(global.get_current_time());
 		   		dt.setTime( new Date().getTime() + 40 );
 			}
-       	}
-       	else
-       	{
-			if (new Date().getTime() > dt.getTime() )
-			{
+       	} else {
+			if (new Date().getTime() > dt.getTime() ) {
 				dt.setTime( new Date().getTime() + 40 );
 				win.minimize();
 			}
-         }
-	}
-	else
-	{
+		}
+	} else {
 		win.unminimize();
 		win.activate(global.get_current_time());
 		dt.setTime( new Date().getTime() + 200 );
 	}
 }
 
-function _getWindowActor()
-{
-	ApplicationString = _('gnome-calculator.desktop');
-	let window =Shell.AppSystem.get_default().lookup_app(ApplicationString).get_windows()[0];
-	if(typeof window == 'undefined')
-	{
+function _getWindowActor() {
+	if (ExtensionUtils.versionCheck(['3.24', '3.24.1', '3.24.2'], Config.PACKAGE_VERSION)) {
+		ApplicationString = _('org.gnome.Calculator.desktop');
+	} else {
+		ApplicationString = _('gnome-calculator.desktop');
+	}
+	
+	var window = Shell.AppSystem.get_default().lookup_app(ApplicationString).get_windows()[0];
+	if(typeof window == 'undefined') {
 		window = 'start';
 	}
 	return window;
 }
 
-function _startApplication()
-{
+function _startApplication() {
 	Main.Util.trySpawnCommandLine('gnome-calculator');
 }
