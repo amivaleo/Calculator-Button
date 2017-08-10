@@ -14,5 +14,6 @@ From gnome extension website: https://extensions.gnome.org/extension/1168/calcul
 > Manual installation
 
 - Download the zip file
-- Unzip it 3- Put the folder in ~/.local/share/gnome-shell/extensions/
+- Unzip it 
+- Put the folder in ~/.local/share/gnome-shell/extensions/
 - Restart the gnome shell environnment (reboot, logout and login again, or alt+f2 then write "r" and press enter).
