@@ -3,16 +3,10 @@
   "description": "A button to easily open gnome-calculator.\n Credits to extensions.gnome.org/extension/939/display-button/", 
   "name": "Calculator Button", 
   "shell-version": [
-    "3.10", 
-    "3.12", 
-    "3.14", 
-    "3.16", 
-    "3.18", 
-    "3.20", 
-    "3.22", 
-    "3.24"
+    "3.28", 
+    "3.30"
   ], 
   "url": "https://github.com/amivaleo/Calculator-Button", 
   "uuid": "calculator-button@amivaleo", 
-  "version": 6
+  "version": 7
 }
