@@ -1,7 +1,7 @@
 const St = imports.gi.St;
 const Main = imports.ui.main;
-const Tweener = imports.ui.tweener;
 const Util = imports.misc.util;
+const Shell = imports.gi.Shell;
 
 let button;
 
@@ -20,22 +20,54 @@ function init(extensionMeta) {
 		style_class: 'system-status-icon'});
 		
 	button.set_child(icon);
-	button.connect('button-press-event', _startApplication);
+	button.connect('button-press-event', _toggleCalculator);
 }
 
 function enable() {
 	let children = Main.panel._rightBox.get_children();
-	Main.panel._rightBox.insert_child_at_index(button, children.length-1)
+	Main.panel._rightBox.insert_child_at_index(button, children.length-1);
 }
 
 function disable() {
 	Main.panel._rightBox.remove_child(button);
 }
 
-function _startApplication() {
-    try {
-        Util.trySpawnCommandLine("gnome-calculator");
-    } catch(err) {
-        Main.notify("Display button extension: error");
-    }
+function _toggleCalculator() {
+	let win = _getWindowActor();
+	
+	if (!win) {
+		Main.notify("Calculator Button Extension: Report this bug to the extension github page https://extensions.gnome.org/extension/1168/calculator-button/");
+		return;
+	}
+	
+	if (win === 'start') {
+	    try {
+			Util.trySpawnCommandLine('gnome-calculator');
+		} catch(err) {
+			Main.notify("Calculator Button Extension: Calculator not found. Is it installed?");
+		}
+	}
+
+	if (win.has_focus()) {
+		if (win.minimized) {
+	  		win.unminimize();
+	   		win.activate(global.get_current_time());
+       	} else {
+			win.minimize();
+		}
+	} else {
+		win.unminimize();
+		win.activate(global.get_current_time());
+	}
+}
+
+function _getWindowActor() {
+	
+	ApplicationString = _('org.gnome.Calculator.desktop');
+	
+	var window = Shell.AppSystem.get_default().lookup_app(ApplicationString).get_windows()[0];
+	if(typeof window == 'undefined') {
+		window = 'start';
+	}
+	return window;
 }
