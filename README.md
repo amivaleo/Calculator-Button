@@ -5,7 +5,7 @@ A button to easily open gnome-calculator.
 
 ## Installation
 
-You can automaticall install the extension or you can download the files and being nerdish! :D
+You can automatically install the extension or you can download the files and being nerdish! :D
 
 
 **Automatic installation (best option):**
