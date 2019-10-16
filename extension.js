@@ -20,51 +20,54 @@ function toggleCalculator() {
 			Main.notify("Calculator Button Extension: Calculator not found. Is it installed?");
 		}
 	}
-
-	if (win.has_focus()) {
-		if (win.minimized) {
-	  		win.unminimize();
-	   		win.activate(global.get_current_time());
-       	} else {
-			win.minimize();
+	else {
+		if (win.has_focus()) {
+			if (win.minimized) {
+				win.unminimize();
+				win.activate(global.get_current_time());
+			} else {
+				win.minimize();
+			}
+		} else {
+			win.unminimize();
+			win.activate(global.get_current_time());
 		}
-	} else {
-		win.unminimize();
-		win.activate(global.get_current_time());
 	}
 }
 
 function _getWindowActor() {
 	
-	ApplicationString = _('org.gnome.Calculator.desktop');
-	
-	var window = Shell.AppSystem.get_default().lookup_app(ApplicationString).get_windows()[0];
-	if(typeof window == 'undefined') {
-		window = 'start';
+	let ApplicationString = _('org.gnome.Calculator.desktop');
+	let app = Shell.AppSystem.get_default().lookup_app(ApplicationString);
+
+	if (app == null) {
+		var window = 'start';
+	} else {
+		var window = app.get_windows()[0];
+		if(typeof window == 'undefined') {
+			window = 'start';
+		}
 	}
+
 	return window;
 }
 
 function init(extensionMeta) {
 }
 
-function enable() {
-	button = new St.Bin({
-		style_class: 'panel-button',
-		reactive: true,
-		can_focus: true,
-		x_fill: true,
-		y_fill: false,
-		track_hover: true});
-						 
-	let icon = new St.Icon({
-		icon_name: 'accessories-calculator-symbolic',
-		style_class: 'system-status-icon'});
-		
-	button.set_child(icon);
-	button.connect('button-press-event', toggleCalculator);
-	
-	Main.panel._rightBox.insert_child_at_index(button, 0);
+function enable () {
+    button = new St.Bin({ style_class: 'panel-button',
+                          reactive: true,
+                          can_focus: true,
+                          x_fill: true,
+                          y_fill: false,
+                          track_hover: true });
+    let icon = new St.Icon({ icon_name: 'accessories-calculator-symbolic',
+                             style_class: 'system-status-icon' });
+    
+    button.set_child(icon);
+    button.connect('button-press-event', toggleCalculator);
+    Main.panel._rightBox.insert_child_at_index(button, 0);
 }
 
 function disable() {
