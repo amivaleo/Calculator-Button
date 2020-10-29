@@ -14,18 +14,22 @@ function toggleCalculator() {
 	}
 	
 	if (win === 'start') {
-	    try {
+		try {
 			Util.trySpawnCommandLine('gnome-calculator');
 		} catch(err) {
-			Main.notify("Calculator Button Extension: Calculator not found. Is it installed?");
+			try {
+				Util.trySpawnCommandLine('flatpak run org.gnome.Calculator');
+			} catch(err) {
+				Main.notify("Calculator Button Extension: Calculator not found. Is it installed (either RPM or flatpak)?");
+			}
 		}
 	}
 
 	if (win.has_focus()) {
 		if (win.minimized) {
-	  		win.unminimize();
-	   		win.activate(global.get_current_time());
-       	} else {
+				win.unminimize();
+		 		win.activate(global.get_current_time());
+		} else {
 			win.minimize();
 		}
 	} else {
@@ -35,7 +39,6 @@ function toggleCalculator() {
 }
 
 function _getWindowActor() {
-	
 	ApplicationString = _('org.gnome.Calculator.desktop');
 	
 	var window = Shell.AppSystem.get_default().lookup_app(ApplicationString).get_windows()[0];
@@ -45,16 +48,13 @@ function _getWindowActor() {
 	return window;
 }
 
-function init(extensionMeta) {
-}
+function init(extensionMeta) {}
 
 function enable() {
 	button = new St.Bin({
 		style_class: 'panel-button',
 		reactive: true,
 		can_focus: true,
-		x_fill: true,
-		y_fill: false,
 		track_hover: true});
 						 
 	let icon = new St.Icon({
