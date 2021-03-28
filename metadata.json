@@ -4,7 +4,7 @@
   "name": "Calculator Button", 
   "shell-version": [
     "3.38",
-    "40.0"
+    "40"
   ], 
   "url": "https://github.com/amivaleo/Calculator-Button", 
   "uuid": "calculator-button@amivaleo", 
